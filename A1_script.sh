@@ -44,7 +44,7 @@ mygit-create-directory() {
 
 mygit-delete-file(){
     echo removing $1 file from git repo
-    git rm $1 # delete file from repo
+    rm $1 # delete file from repo
     echo file $1 removed from git repo
 }
 

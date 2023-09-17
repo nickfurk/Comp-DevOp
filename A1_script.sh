@@ -60,7 +60,7 @@ mygit-list-contents(){
 }
 
 # checks number of CLI arguments
-if [ $# -eq 0]; then
+if [ $# -eq 0 ]; then
     echo No function called
     exit 1
 fi

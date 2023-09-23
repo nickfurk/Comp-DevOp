@@ -16,18 +16,18 @@ mygit-init() {
     # if the directory does not exists
     if [ ! -d "$directory" ]
     then
-        echo Error: directory does not exists: $directory
+        echo Error: directory does not exists: "$directory"
         exit 1
     fi
 
-    cd $directory || exit 1 # enter directory or fail
-    echo Currently in $directory directory
-    echo Initializing git init
+    cd "$directory" || exit 1 # enter directory or fail
+    echo currently in "$directory" directory
+    echo "initializing git init"
     git init || {
         echo "Error: failed to initialize git repository"
         exit 1
     }
-    echo COMPLETE git init in $directory directory
+    echo COMPLETE git init in "$directory" directory
 }
 
 
@@ -48,12 +48,12 @@ mygit-clone() {
     # checks if the directory already exists
     if [ -d "$local_directory" ]
     then  
-        echo ERROR: directory already exists: $local_directory
+        echo ERROR: directory already exists: "$local_directory"
         exit 1
     fi
 
-    echo cloning remote directory from $remote_url
-    git clone $remote_url $local_directory || {
+    echo cloning remote directory from "$remote_url"
+    git clone "$remote_url" "$local_directory" || {
         echo Error: Failed to clone remote repository
         exit 1
     } 
@@ -80,11 +80,10 @@ mygit-commit() {
     commit_message="$2"
 
     echo adding to git
-    git add .
-    # git add . || {
-    #     echo ERROR: Failed to add files to git
-    #     exit 1
-    # }
+    git add . || {
+        echo ERROR: Failed to add files to git
+        exit 1
+    }
     echo commiting to git
     git commit -m "$commit_message" || {
         echo ERROR: failed to commit changes
@@ -128,16 +127,16 @@ mygit-create-directory() {
     # check if the directory exists
     if [ -d "$directory_name" ]
     then
-        echo ERROR: directory already exists $directory_name
+        echo ERROR: directory already exists "$directory_name"
         exit 1
     fi
 
-    echo creating new directory $directory_name
-    mkdir $directory_name || {
+    echo creating new directory "$directory_name"
+    mkdir "$directory_name" || {
         echo ERROR: failed to create directory
         exit 1
     }
-    echo COMPLETE created new directory $directory_name
+    echo COMPLETE created new directory "$directory_name"
 }
 
 mygit-delete-file(){
@@ -156,16 +155,16 @@ mygit-delete-file(){
     # check if file does not exists
     if [ ! -f "$file_name" ]
     then
-        echo ERROR: $file_name does not exists
+        echo ERROR: "$file_name" does not exists
         exit 1
     fi
 
-    echo removing $file_name file from git repo
-    rm $file_name || {
+    echo removing "$file_name" file from git repo
+    rm "$file_name" || {
         echo ERROR: Failed to remove file from git repo
         exit 1
     }
-    echo COMPLETE removing file $file_name from git repo
+    echo COMPLETE removing file "$file_name" from git repo
 }
 
 mygit-delete-directory(){
@@ -188,12 +187,12 @@ mygit-delete-directory(){
         exit 1
     fi
 
-    echo removing $directory_name directory from git repo
-    rm -r $directory_name || {
+    echo removing "$directory_name" directory from git repo
+    rm -r "$directory_name" || {
         echo ERROR: failed to remove directory and its contents from git repo
         exit 1
     }
-    echo COMPLETE removal of $directory_name directory from git repo
+    echo COMPLETE removal of "$directory_name" directory from git repo
 }
 
 mygit-list-contents(){
@@ -209,7 +208,7 @@ mygit-list-contents(){
     directory=$1
 
     echo listing all contents:
-    ls $directory || {
+    ls "$directory" || {
         echo ERROR: failed to list directory contents
         exit 1
     }
@@ -258,32 +257,32 @@ case "$1" in
         menu
         ;;
     "mygit-init")
-        mygit-init $2
+        mygit-init "$2"
         ;;
     "mygit-clone")
-        mygit-clone $2 $3
+        mygit-clone "$2" "$3"
         ;;
     "mygit-commit")
-        mygit-commit $2 $3
+        mygit-commit "$2" "$3"
         ;;
     "mygit-push")
         mygit-push
         ;;
     "mygit-create-directory")
-        mygit-create-directory $2
+        mygit-create-directory "$2"
         ;;
     "mygit-delete-file")
-        mygit-delete-file $2
+        mygit-delete-file "$2"
         ;;
     "mygit-delete-directory")
-        mygit-delete-directory $2
+        mygit-delete-directory "$2"
         ;;
     "mygit-list-contents")
-        mygit-list-contents $2
+        mygit-list-contents "$2"
         ;;
     *)
         # other cases
-        echo Invalid function name: $1
+        echo Invalid function name: "$1"
         exit 1
         ;;
 esac

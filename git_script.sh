@@ -4,14 +4,14 @@ mygit-init() {
     echo ===========================================
     echo mygit-init command called
 
-    directory = $1
-
     # if number of arguments does 'not equal' to 1
     if [ $# -ne 1 ]
     then
         echo Error: improper usage, try mygit-init "<directory>"
         exit 1
     fi
+
+    directory=$1
 
     # if the directory does not exists
     if [ ! -d "$directory" ]
@@ -35,15 +35,15 @@ mygit-clone() {
     echo ===========================================
     echo mygit-clone command called
 
-    remote_url = $1
-    local_directory = $2
-
     # if number of arguments does 'not equal' to 2
     if [ $# -ne 2 ]
     then
         echo ERROR: improper usage, try mygit-clone "<remote_url> <local_directory>"
         exit 1
     fi
+
+    remote_url=$1
+    local_directory=$2
 
     # checks if the directory already exists
     if [ -d "$local_directory" ]
@@ -52,10 +52,8 @@ mygit-clone() {
         exit 1
     fi
 
-    cd "$(dirname "$local_directory")" || exit 1 # cd into directory or exit
-    echo currently in $(pwd) directory
     echo cloning remote directory from $remote_url
-    git clone $remote_url || {
+    git clone $remote_url $local_directory || {
         echo Error: Failed to clone remote repository
         exit 1
     } 
@@ -66,10 +64,8 @@ mygit-commit() {
     echo ===========================================
     echo mygit-commit command called
 
-    commit_message = $2
-
-    # if number of arguments does 'not equal' to 2. For the -m and commit_message
-    if [ $# -ne 2 ]
+    # check if there are less than 2 arguments
+    if [ $# -lt 2 ]
     then
         echo ERROR: improper usage, try mygit-commit -m "<commit_message>"
         exit 1
@@ -81,11 +77,14 @@ mygit-commit() {
         exit 1
     fi
 
+    commit_message="$2"
+
     echo adding to git
-    git add . || {
-        echo Error: Failed to add files to git
-        exit 1
-    }
+    git add .
+    # git add . || {
+    #     echo ERROR: Failed to add files to git
+    #     exit 1
+    # }
     echo commiting to git
     git commit -m "$commit_message" || {
         echo ERROR: failed to commit changes
@@ -117,14 +116,14 @@ mygit-create-directory() {
     echo ===========================================
     echo mygit-create-directory command called
 
-    directory_name = $1
-
     # check if there is 1 argument
     if [ $# -ne 1 ]
     then 
         echo ERROR: improper usage, try mygit-create-directory "<directory_name>"
         exit 1
     fi
+
+    directory_name=$1
 
     # check if the directory exists
     if [ -d "$directory_name" ]
@@ -145,14 +144,14 @@ mygit-delete-file(){
     echo ===========================================
     echo mygit-delete-file command called
 
-    file_name = $1
-
     # check if there is 1 argument
     if [ $# -ne 1 ]
     then 
         echo ERROR: improper usage, try mygit-delete-file "<file_name>"
         exit 1
     fi
+
+    file_name=$1
 
     # check if file does not exists
     if [ ! -f "$file_name" ]
@@ -173,14 +172,14 @@ mygit-delete-directory(){
     echo ===========================================
     echo mygit-delete-directory command called
 
-    directory_name = $1
-
     # check if there is 1 argument
     if [ $# -ne 1 ]
     then
         echo ERROR: improper usage, try mygit-delete-directory "<directory_name>"
         exit 1
     fi 
+
+    directory_name=$1
 
     # check if directory exists
     if [ ! -d "$directory_name" ]
@@ -190,7 +189,7 @@ mygit-delete-directory(){
     fi
 
     echo removing $directory_name directory from git repo
-    git rm -r $directory_name || {
+    rm -r $directory_name || {
         echo ERROR: failed to remove directory and its contents from git repo
         exit 1
     }
@@ -201,7 +200,13 @@ mygit-list-contents(){
     echo ===========================================
     echo mygit-list-contents command called
 
-    directory = $1
+    if [ $# -ne 1 ]
+    then
+        echo ERROR: improper usage, try mygit-list-contents "<directory>"
+        exit 1
+    fi
+
+    directory=$1
 
     echo listing all contents:
     ls $directory || {
